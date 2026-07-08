@@ -1,0 +1,35 @@
+<div class="container mt-4">
+    <div class="card shadow-sm border-0 border-start border-primary border-5 p-4">
+        <h2 class="text-primary fw-bold"><i class="bi bi-person-badge"></i> Lead #{{ lead.id_lead }}</h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="text-primary">Datos Personales</h5>
+                    {{ form_p.as_p }}
+                </div>
+                <div class="col-md-6">
+                    <h5 class="text-primary">Gestión Operativa</h5>
+                    {{ form_l.as_p }}
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h5 class="text-primary">Historial de Observaciones</h5>
+                <div class="bg-light p-3 rounded mb-3" style="max-height: 200px; overflow-y: auto;">
+                    {% for obs in historial_obs %}
+                        <div class="border-bottom mb-2 pb-2">
+                            <small class="text-muted">{{ obs.fecha_registro }}</small>
+                            <p class="m-0">{{ obs.observacion }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <textarea name="nueva_observacion" class="form-control" placeholder="Agregar nueva observación..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-3 w-100">Guardar Cambios y Nueva Observación</button>
+        </form>
+    </div>
+</div>

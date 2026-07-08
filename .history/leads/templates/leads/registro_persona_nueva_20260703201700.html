@@ -1,0 +1,40 @@
+<form method="post">
+    {% csrf_token %}
+    
+    <div class="row mb-4">
+        <div class="col-md-6">{{ form.telefono_referencia.label_tag }} {{ form.telefono_referencia }}</div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-4">{{ form.nombres.label_tag }} {{ form.nombres }}</div>
+        <div class="col-md-4">{{ form.apellidos.label_tag }} {{ form.apellidos }}</div>
+        <div class="col-md-4">{{ form.tipo_documento_persona.label_tag }} {{ form.tipo_documento_persona }}</div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-4">{{ form.numero_documento_persona.label_tag }} {{ form.numero_documento_persona }}</div>
+        <div class="col-md-4">{{ form.fecha_expedicion_persona.label_tag }} {{ form.fecha_expedicion_persona }}</div>
+        <div class="col-md-4">{{ form.fecha_nacimiento_persona.label_tag }} {{ form.fecha_nacimiento_persona }}</div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-4">{{ form.genero_persona.label_tag }} {{ form.genero_persona }}</div>
+        <div class="col-md-4">{{ form.correo_persona.label_tag }} {{ form.correo_persona }}</div>
+        <div class="col-md-4">{{ form.id_ciudad.label_tag }} {{ form.id_ciudad }}</div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-4">{{ form.direccion_persona.label_tag }} {{ form.direccion_persona }}</div>
+        <div class="col-md-4">{{ form.complemento_persona.label_tag }} {{ form.complemento_persona }}</div>
+        <div class="col-md-4">{{ form.barrio_persona.label_tag }} {{ form.barrio_persona }}</div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-12">
+            {{ form.observacion_referencia.label_tag }}
+            {{ form.observacion_referencia }}
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Guardar Registro y Crear Lead</button>
+</form>

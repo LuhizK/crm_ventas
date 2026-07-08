@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeuDoor - Panel de Control</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        .metric-card { transition: transform 0.2s; border: none; }
+        .metric-card:hover { transform: translateY(-5px); }
+    </style>
+</head>
+<body class="bg-light">
+
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center p-4 bg-white shadow-sm rounded-3 mb-4">
+            <div>
+                <h1 class="text-primary m-0 fw-bold"><i class="bi bi-speedometer2"></i> DeuDoor</h1>
+                <p class="text-muted m-0">Sistema de Gestión de Leads.</p>
+            </div>
+            <span class="badge bg-secondary p-2">Desarrollo en construcción.</span>
+        </div>
+
+        {% if not operacion_habilitada %}
+        <div class="alert alert-danger shadow-sm p-4 mb-4 border-start border-danger border-5" role="alert">
+            <h4 class="alert-heading fw-bold"><i class="bi bi-exclamation-triangle-fill"></i> ¡Sistema Bloqueado para Operación!</h4>
+            <p class="mb-2">Para garantizar la integridad estructural de la base de datos, el flujo de captura de Leads está deshabilitado hasta que registre al menos un elemento de cada tabla paramétrica:</p>
+            <hr>
+            <div class="d-flex gap-3 mt-2">
+                <span class="badge {% if tiene_ciudades %}bg-success{% else %}bg-danger{% endif %} p-2">
+                    <i class="bi {% if tiene_ciudades %}bi-check-circle-fill{% else %}bi-x-circle-fill{% endif %}"></i> Ciudades
+                </span>
+                <span class="badge {% if tiene_sedes %}bg-success{% else %}bg-danger{% endif %} p-2">
+                    <i class="bi {% if tiene_sedes %}bi-check-circle-fill{% else %}bi-x-circle-fill{% endif %}"></i> Sedes
+                </span>
+                <span class="badge {% if tiene_trabajadores %}bg-success{% else %}bg-danger{% endif %} p-2">
+                    <i class="bi {% if tiene_trabajadores %}bi-check-circle-fill{% else %}bi-x-circle-fill{% endif %}"></i> Trabajadores
+                </span>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="row g-4 mb-5">
+            <div class="col-md-3">
+                <div class="card metric-card shadow-sm h-100 bg-white border-start border-info border-4 p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted text-uppercase small">Ciudades</h6>
+                            <h2 class="fw-bold m-0 text-dark">{{ total_ciudades }}</h2>
+                        </div>
+                        <i class="bi bi-geo-alt text-info fs-1"></i>
+                    </div>
+                    <a href="{% url 'listar_ciudades' %}" class="btn btn-outline-info btn-sm mt-3 w-100">Administrar Lista</a>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card metric-card shadow-sm h-100 bg-white border-start border-warning border-4 p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted text-uppercase small">Sedes</h6>
+                            <h2 class="fw-bold m-0 text-dark">{{ total_sedes }}</h2>
+                        </div>
+                        <i class="bi bi-building text-warning fs-1"></i>
+                    </div>
+                    <a href="{% url 'listar_sedes' %}" class="btn btn-outline-warning btn-sm mt-3 w-100">Administrar Lista</a>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card metric-card shadow-sm h-100 bg-white border-start border-success border-4 p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted text-uppercase small">Trabajadores</h6>
+                            <h2 class="fw-bold m-0 text-dark">{{ total_trabajadores }}</h2>
+                        </div>
+                        <i class="bi bi-people text-success fs-1"></i>
+                    </div>
+                    <a href="{% url 'listar_sedes' %}" class="btn btn-outline-success btn-sm mt-3 w-100">Administrar Lista</a>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card metric-card shadow-sm h-100 bg-white border-start border-primary border-4 p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted text-uppercase small">Leads Procesados</h6>
+                            <h2 class="fw-bold m-0 text-dark">{{ total_leads }}</h2>
+                        </div>
+                        <i class="bi bi-telephone-outbound text-primary fs-1"></i>
+                    </div>
+                    <a href="#" class="btn btn-outline-primary btn-sm mt-3 w-100">Ver Historial</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card p-5 text-center bg-white shadow-sm border-0 rounded-3">
+            <div class="my-3">
+                <i class="bi bi-headset text-primary" style="font-size: 4rem;"></i>
+                <h3 class="fw-bold mt-3">Módulo de Ingreso Operativo</h3>
+                <p class="text-muted mx-auto" style="max-width: 600px;">
+                    Inicie el proceso de ventas telefónicas para registrar datos personales, capturar reportes de plataformas de riesgo y emitir acuerdos de pago integrados.
+                </p>
+                
+                {% if operacion_habilitada %}
+                    <a href="{% url 'captura_inicial' %}" class="btn btn-primary btn-lg px-5 shadow-sm fw-bold">
+                        <i class="bi bi-telephone-plus-fill"></i> Iniciar Flujo de Captura
+                    </a>
+                {% else %}
+                    <button class="btn btn-secondary btn-lg px-5 fw-bold" disabled>
+                        <i class="bi bi-lock-fill"></i> Flujo Bloqueado (Faltan Prerrequisitos)
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Lead #{{ lead.id_lead }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center p-4 bg-white shadow-sm rounded-3 mb-4 border-start border-primary border-4">
+        <div>
+            <h1 class="text-primary m-0 fw-bold"><i class="bi bi-person-badge"></i> Gestión de Lead #{{ lead.id_lead }}</h1>
+            <p class="text-muted m-0">Estado actual: <strong>{{ lead.estado_lead }}</strong></p>
+        </div>
+        <a href="{% url 'listar_leads' %}" class="btn btn-secondary">Volver al Historial</a>
+    </div>
+
+    <form method="post" class="card shadow-sm border-0 p-4 bg-white mb-5">
+        {% csrf_token %}
+        
+        <div class="row g-4">
+            <!-- Columna Izquierda: Información Personal y Teléfonos -->
+            <div class="col-md-6">
+                <h5 class="text-primary border-bottom pb-2 mb-3"><i class="bi bi-person-fill"></i> Información Personal</h5>
+                {{ form_p.as_p }}
+                
+                <h6 class="text-primary mt-3">Teléfonos Registrados:</h6>
+                <ul class="list-group">
+                    {% for tel in telefonos %}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>{{ tel.tipo_telefono }}</span>
+                        <strong>{{ tel.numero_telefono }}</strong>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item text-muted">No hay teléfonos registrados.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <!-- Columna Derecha: Plataformas y Acuerdos -->
+            <div class="col-md-6">
+                <h5 class="text-primary border-bottom pb-2 mb-3"><i class="bi bi-shield-check"></i> Plataformas de Riesgo</h5>
+                {% for plat in plataformas %}
+                    <div class="card mb-2 bg-light">
+                        <div class="card-body p-2">
+                            <strong>{{ plat.nombre_plataforma }}</strong>: {{ plat.usuario }} <br>
+                            <small>{{ plat.notas_adicionales }}</small>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-muted small">Sin reportes cargados.</p>
+                {% endfor %}
+
+                <h5 class="text-primary border-bottom pb-2 mt-4"><i class="bi bi-cash-stack"></i> Acuerdo Financiero</h5>
+                {% if acuerdo %}
+                    <div class="alert alert-info">
+                        <strong>Total:</strong> ${{ acuerdo.valor_total_acuerdo_pago }}<br>
+                        <small>{{ acuerdo.observaciones_acuerdo_pago }}</small>
+                    </div>
+                {% else %}
+                    <p class="text-muted small">No hay acuerdo financiero.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Historial de Observaciones -->
+        <div class="mt-4">
+            <h5 class="text-primary border-bottom pb-2 mb-3"><i class="bi bi-clock-history"></i> Historial de Observaciones</h5>
+            <div class="bg-light p-3 rounded mb-3 border" style="max-height: 200px; overflow-y: auto;">
+                {% for obs in historial_obs %}
+                    <div class="border-bottom mb-2 pb-2">
+                        <small class="text-muted d-block">{{ obs.fecha_registro }}</small>
+                        <p class="m-0 text-dark">{{ obs.observacion }}</p>
+                    </div>
+                {% empty %}
+                    <p class="text-muted text-center m-0">No hay observaciones previas.</p>
+                {% endfor %}
+            </div>
+            
+            <label class="form-label fw-bold text-primary">Agregar Nueva Observación:</label>
+            <textarea name="nueva_observacion" class="form-control" rows="3" placeholder="Escribe aquí la nueva actualización..."></textarea>
+        </div>
+
+        <div class="mt-4 text-end">
+            <button type="submit" class="btn btn-primary btn-lg px-5 fw-bold">
+                <i class="bi bi-save"></i> Guardar Todos los Cambios
+            </button>
+        </div>
+    </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

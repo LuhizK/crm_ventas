@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acuerdos de Pago</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .form-label { font-weight: 600; color: #495057; font-size: 0.9rem; }
+        .section-card { border-top: 4px solid #198754; } /* Verde financiero */
+        .error-block { 
+            border-left: 5px solid #dc3545; 
+            background-color: #f8d7da; 
+            color: #842029; 
+            padding: 15px; 
+            margin-bottom: 25px; 
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <div class="container mt-5 mb-5">
+        
+        <div class="card p-3 mb-4 bg-white shadow-sm border-0 border-start border-primary border-4">
+            <h2 class="text-primary m-0">Generar Acuerdo Financiero</h2>
+            <p class="text-muted mt-2 mb-0">
+                Cliente: <strong>{{ lead.id_persona.nombres }} {{ lead.id_persona.apellidos }}</strong>
+            </p>
+            <p class="text-muted mt-0 mb-0">
+                Lead Asociado: <strong>{{ lead.id_lead }}</strong>
+            </p>
+            <p class="text-muted mt-0 mb-0">
+                Teléfono Asociado: <strong>{{ lead.telefono_marcado }}</strong>
+            </p>
+        </div>
+
+        {% if form.non_field_errors %}
+        <div class="error-block shadow-sm">
+            <h5 class="mb-1 text-danger">⚠️ Error en la validación contable:</h5>
+            <ul class="mb-0">
+                {% for error in form.non_field_errors %}
+                    <li><strong>{{ error }}</strong></li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <div class="card shadow-sm p-4 h-100 section-card">
+                        <h4 class="mb-3 text-dark">Servicio Principal</h4>
+                        
+                        <div class="mb-3">
+                            {{ form.servicio_1.label_tag }}
+                            {{ form.servicio_1 }}
+                            <div class="text-danger small mt-1 fw-bold">{{ form.servicio_1.errors }}</div>
+                        </div>
+                        
+                        <div class="mb-0">
+                            {{ form.valor_servicio_1.label_tag }}
+                            {{ form.valor_servicio_1 }}
+                            <div class="text-danger small mt-1 fw-bold">{{ form.valor_servicio_1.errors }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card shadow-sm p-4 h-100 section-card" style="border-top-color: #6c757d;">
+                        <h4 class="mb-3 text-secondary">Servicio Secundario (Opcional)</h4>
+                        
+                        <div class="mb-3">
+                            {{ form.servicio_2.label_tag }}
+                            {{ form.servicio_2 }}
+                            <div class="text-danger small mt-1 fw-bold">{{ form.servicio_2.errors }}</div>
+                        </div>
+                        
+                        <div class="mb-0">
+                            {{ form.valor_servicio_2.label_tag }}
+                            {{ form.valor_servicio_2 }}
+                            <div class="text-danger small mt-1 fw-bold">{{ form.valor_servicio_2.errors }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h4 class="mb-3 mt-4 text-dark border-bottom pb-2">Plan de Pagos</h4>
+            <div class="row g-4 mb-4">
+                
+                <div class="col-md-4">
+                    <div class="card shadow-sm p-3 border-primary h-100">
+                        <h5 class="text-primary">Cuota 1</h5>
+                        <div class="mb-3">
+                            {{ form.fecha_cuota_1.label_tag }}
+                            {{ form.fecha_cuota_1 }}
+                            <div class="text-danger small">{{ form.fecha_cuota_1.errors }}</div>
+                        </div>
+                        <div class="mb-0">
+                            {{ form.valor_cuota_1.label_tag }}
+                            {{ form.valor_cuota_1 }}
+                            <div class="text-danger small">{{ form.valor_cuota_1.errors }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card shadow-sm p-3 h-100">
+                        <h5 class="text-secondary">Cuota 2</h5>
+                        <div class="mb-3">
+                            {{ form.fecha_cuota_2.label_tag }}
+                            {{ form.fecha_cuota_2 }}
+                            <div class="text-danger small">{{ form.fecha_cuota_2.errors }}</div>
+                        </div>
+                        <div class="mb-0">
+                            {{ form.valor_cuota_2.label_tag }}
+                            {{ form.valor_cuota_2 }}
+                            <div class="text-danger small">{{ form.valor_cuota_2.errors }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card shadow-sm p-3 h-100">
+                        <h5 class="text-secondary">Cuota 3</h5>
+                        <div class="mb-3">
+                            {{ form.fecha_cuota_3.label_tag }}
+                            {{ form.fecha_cuota_3 }}
+                            <div class="text-danger small">{{ form.fecha_cuota_3.errors }}</div>
+                        </div>
+                        <div class="mb-0">
+                            {{ form.valor_cuota_3.label_tag }}
+                            {{ form.valor_cuota_3 }}
+                            <div class="text-danger small">{{ form.valor_cuota_3.errors }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-12">
+                    <div class="card shadow-sm p-4 border-warning">
+                        <h4 class="mb-3 text-dark">Bitácora / Observaciones del Lead</h4>
+                        <p class="text-muted small mb-2">Edita o agrega nueva información a las notas de este cliente sobre su capacidad de pago.</p>
+                        {{ form.observacion_general }}
+                        <div class="text-danger small">{{ form.observacion_general.errors }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <button type="submit" class="btn btn-success btn-lg w-100 shadow">Registrar Acuerdo Financiero y Finalizar Venta</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
