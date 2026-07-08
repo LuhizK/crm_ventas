@@ -1,12 +1,15 @@
 from django.db import models
 
+
 class AcuerdoPago(models.Model):
     id_acuerdo_pago = models.AutoField(primary_key=True)
     valor_total_acuerdo_pago = models.DecimalField(max_digits=15, decimal_places=2)
     observaciones_acuerdo_pago = models.TextField(blank=True, null=True)
 
     class Meta:
+        managed = False
         db_table = 'acuerdo_pago'
+
 
 class Cargo(models.Model):
     id_cargo = models.AutoField(primary_key=True)
@@ -14,17 +17,22 @@ class Cargo(models.Model):
     descripcion_cargo = models.TextField(blank=True, null=True)
 
     class Meta:
+        managed = False
         db_table = 'cargo'
+
 
 class Ciudad(models.Model):
     id_ciudad = models.AutoField(primary_key=True)
     ciudad = models.CharField(unique=True, max_length=100)
 
+    # Añade esto justo debajo de los campos:
     def __str__(self):
-        return self.ciudad
+        return self.ciudad # Esto le dice a Django: "Muestra el nombre de la ciudad"
 
     class Meta:
+        managed = False
         db_table = 'ciudad'
+
 
 class FechasPago(models.Model):
     id_fecha_pago = models.AutoField(primary_key=True)
@@ -36,14 +44,48 @@ class FechasPago(models.Model):
     fecha_pagado = models.DateField(blank=True, null=True)
 
     class Meta:
+        managed = False
         db_table = 'fechas_pago'
+
+
+class Leads(models.Model):
+    id_lead = models.AutoField(primary_key=True)
+    id_persona = models.ForeignKey('Persona', models.DO_NOTHING, db_column='id_persona', null=True, blank=True)
+    id_trabajador = models.ForeignKey('Trabajador', models.DO_NOTHING, db_column='id_trabajador')
+    id_contrato = models.ForeignKey('MotivoContrato', models.DO_NOTHING, db_column='id_contrato', null=True, blank=True)
+    id_acuerdo_pago = models.ForeignKey('AcuerdoPago', models.DO_NOTHING, db_column='id_acuerdo_pago', null=True, blank=True)
+    estado_lead = models.CharField(max_length=20, default='NUEVO') 
+    telefono_marcado = models.CharField(max_length=20, null=True, blank=True) 
+    fecha_creacion = models.DateField(auto_now_add=True, null=True)
+    hora_creacion = models.TimeField(auto_now_add=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'leads'
+
 
 class MotivoContrato(models.Model):
     id_contrato = models.AutoField(primary_key=True)
     motivo_contrato = models.CharField(unique=True, max_length=200)
 
     class Meta:
+        managed = False
         db_table = 'motivo_contrato'
+
+
+class Observaciones(models.Model):
+    id_observaciones = models.AutoField(primary_key=True)
+    id_lead = models.ForeignKey(Leads, models.DO_NOTHING, db_column='id_lead')
+    id_trabajador = models.ForeignKey('Trabajador', models.DO_NOTHING, db_column='id_trabajador', blank=True, null=True)
+    observacion = models.TextField()
+    motivo_finalizacion_llamada = models.CharField(max_length=200, blank=True, null=True)
+    estado_llamada = models.CharField(max_length=50, blank=True, null=True)
+    fecha_registro = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'observaciones'
+
 
 class Persona(models.Model):
     id_persona = models.AutoField(primary_key=True)
@@ -61,7 +103,30 @@ class Persona(models.Model):
     id_ciudad = models.ForeignKey(Ciudad, models.DO_NOTHING, db_column='id_ciudad', blank=True, null=True)
 
     class Meta:
+        managed = False
         db_table = 'persona'
+
+
+class ReporteGrafico(models.Model):
+    id_reporte_grafico = models.AutoField(primary_key=True)
+    id_lead = models.ForeignKey(Leads, models.DO_NOTHING, db_column='id_lead')
+    documento_reporte_grafico = models.FileField(upload_to='reportes_plataformas/', max_length=255, blank=True, null=True)
+    tipo_reporte_grafico = models.CharField(max_length=50, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'reporte_grafico'
+
+
+class Rol(models.Model):
+    id_rol = models.AutoField(primary_key=True)
+    nombre_rol = models.CharField(unique=True, max_length=100)
+    descripcion_rol = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'rol'
+
 
 class Sede(models.Model):
     id_sede = models.AutoField(primary_key=True)
@@ -72,59 +137,9 @@ class Sede(models.Model):
     telefono_sede = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
+        managed = False
         db_table = 'sede'
 
-class Trabajador(models.Model):
-    id_trabajador = models.AutoField(primary_key=True)
-    id_persona = models.OneToOneField(Persona, models.DO_NOTHING, db_column='id_persona')
-    id_sede = models.ForeignKey(Sede, models.DO_NOTHING, db_column='id_sede', blank=True, null=True)
-    id_cargo = models.ForeignKey(Cargo, models.DO_NOTHING, db_column='id_cargo', blank=True, null=True)
-
-    class Meta:
-        db_table = 'trabajador'
-
-class Leads(models.Model):
-    id_lead = models.AutoField(primary_key=True)
-    id_persona = models.ForeignKey(Persona, models.DO_NOTHING, db_column='id_persona', null=True, blank=True)
-    id_trabajador = models.ForeignKey(Trabajador, models.DO_NOTHING, db_column='id_trabajador')
-    id_contrato = models.ForeignKey(MotivoContrato, models.DO_NOTHING, db_column='id_contrato', null=True, blank=True)
-    id_acuerdo_pago = models.ForeignKey(AcuerdoPago, models.DO_NOTHING, db_column='id_acuerdo_pago', null=True, blank=True)
-    estado_lead = models.CharField(max_length=20, default='NUEVO') 
-    telefono_marcado = models.CharField(max_length=20, null=True, blank=True) 
-    fecha_creacion = models.DateField(auto_now_add=True, null=True)
-    hora_creacion = models.TimeField(auto_now_add=True, null=True)
-
-    class Meta:
-        db_table = 'leads'
-
-class Observaciones(models.Model):
-    id_observaciones = models.AutoField(primary_key=True)
-    id_lead = models.ForeignKey(Leads, models.DO_NOTHING, db_column='id_lead')
-    id_trabajador = models.ForeignKey(Trabajador, models.DO_NOTHING, db_column='id_trabajador', blank=True, null=True)
-    observacion = models.TextField()
-    motivo_finalizacion_llamada = models.CharField(max_length=200, blank=True, null=True)
-    estado_llamada = models.CharField(max_length=50, blank=True, null=True)
-    fecha_registro = models.DateTimeField(blank=True, null=True)
-
-    class Meta:
-        db_table = 'observaciones'
-
-class ReporteGrafico(models.Model):
-    id_reporte_grafico = models.AutoField(primary_key=True)
-    id_lead = models.ForeignKey(Leads, models.DO_NOTHING, db_column='id_lead')
-    documento_reporte_grafico = models.FileField(upload_to='reportes_plataformas/', max_length=255, blank=True, null=True)
-    tipo_reporte_grafico = models.CharField(max_length=50, blank=True, null=True)
-
-    class Meta:
-        db_table = 'reporte_grafico'
-
-class Rol(models.Model):
-    id_rol = models.AutoField(primary_key=True)
-    nombre_rol = models.CharField(unique=True, max_length=100)
-    descripcion_rol = models.TextField(blank=True, null=True)
-
-    class Meta:
-        db_table = 'rol'
 
 class Telefonos(models.Model):
     id_telefono = models.AutoField(primary_key=True)
@@ -133,7 +148,20 @@ class Telefonos(models.Model):
     id_persona = models.ForeignKey(Persona, models.DO_NOTHING, db_column='id_persona')
 
     class Meta:
+        managed = False
         db_table = 'telefonos'
+
+
+class Trabajador(models.Model):
+    id_trabajador = models.AutoField(primary_key=True)
+    id_persona = models.OneToOneField(Persona, models.DO_NOTHING, db_column='id_persona')
+    id_sede = models.ForeignKey(Sede, models.DO_NOTHING, db_column='id_sede', blank=True, null=True)
+    id_cargo = models.ForeignKey(Cargo, models.DO_NOTHING, db_column='id_cargo', blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'trabajador'
+
 
 class Usuario(models.Model):
     id_usuario = models.AutoField(primary_key=True)
@@ -144,7 +172,9 @@ class Usuario(models.Model):
     estado_usuario = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
+        managed = False
         db_table = 'usuario'
+
 
 class UsuarioReporte(models.Model):
     id_reporte = models.AutoField(primary_key=True)
@@ -155,11 +185,13 @@ class UsuarioReporte(models.Model):
     descripcion_reporte = models.TextField(blank=True, null=True)
 
     class Meta:
+        managed = False
         db_table = 'usuario_reporte'
         
 class DocumentosLead(models.Model):
     id_documento = models.AutoField(primary_key=True)
     id_lead = models.ForeignKey(Leads, on_delete=models.CASCADE, db_column='id_lead')
+    
     TIPO_DOC_CHOICES = [
         ('CEDULA', 'Documento de Identidad'),
         ('CONTRATO', 'Contrato Firmado'),
@@ -167,21 +199,26 @@ class DocumentosLead(models.Model):
         ('OTRO', 'Otro Documento')
     ]
     tipo_documento = models.CharField(max_length=50, choices=TIPO_DOC_CHOICES)
+
     archivo = models.FileField(upload_to='documentos_clientes/')
     descripcion = models.TextField(blank=True, null=True)
     fecha_subida = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        managed = False
         db_table = 'documentos_lead'
+        
         
 class Servicios(models.Model):
     id_servicio = models.AutoField(primary_key=True)
     nombre_servicio = models.CharField(max_length=150)
+    # DecimalField es obligatorio para dinero, para no perder centavos
     precio_minimo = models.DecimalField(max_digits=15, decimal_places=2) 
     precio_maximo = models.DecimalField(max_digits=15, decimal_places=2)
     estado = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
+        managed = False
         db_table = 'servicios'
         
     def __str__(self):
@@ -194,4 +231,5 @@ class AcuerdoPagoDetalle(models.Model):
     valor_cobrado = models.DecimalField(max_digits=15, decimal_places=2)
 
     class Meta:
+        managed = False
         db_table = 'acuerdo_pago_detalle'
