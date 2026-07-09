@@ -25,11 +25,4 @@ def crear_editar_ciudad(request, id_ciudad=None):
         'es_edicion': True if id_ciudad else False
     })
     
-def eliminar_ciudad(request, id_ciudad):
-    ciudad = get_object_or_404(Ciudad, id_ciudad=id_ciudad)
     
-    if request.method == 'POST':
-        ciudad.delete()
-        return redirect('listar_ciudades') # Ajusta este nombre al que uses en tus urls
-        
-    return render(request, 'leads/eliminar_ciudad.html', {'ciudad': ciudad})

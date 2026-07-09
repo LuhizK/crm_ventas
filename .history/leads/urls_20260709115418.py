@@ -29,5 +29,4 @@ urlpatterns = [
     path('leads-historial/', listar_leads, name='listar_leads'),
     path('leads/editar/<int:id_lead>/', editar_lead, name='editar_lead'),
     path('leads/pago/<int:id_fecha_pago>/', registrar_pago, name='registrar_pago'),
-    path('ciudades/eliminar/<int:id_ciudad>/', eliminar_ciudad, name='eliminar_ciudad'),
 ]

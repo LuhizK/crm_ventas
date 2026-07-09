@@ -31,3 +31,4 @@ urlpatterns = [
     path('leads/pago/<int:id_fecha_pago>/', registrar_pago, name='registrar_pago'),
     path('ciudades/eliminar/<int:id_ciudad>/', eliminar_ciudad, name='eliminar_ciudad'),
 ]
+]
