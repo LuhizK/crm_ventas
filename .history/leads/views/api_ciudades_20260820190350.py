@@ -29,7 +29,6 @@ def ciudad_api_list(request):
 # RUTA 2: Detalle (GET), Actualizar (PUT), Eliminar (DELETE) de UNA ciudad
 # --------------------------------------------------------
 @api_view(['GET', 'PUT', 'DELETE'])
-@validar_token
 def ciudad_api_detail(request, pk):
     try:
         ciudad = Ciudad.objects.get(pk=pk)

@@ -9,7 +9,6 @@ from .api_auth import validar_token
 # RUTA 1: Lista todas las ciudades (GET) o Crea una nueva (POST)
 # --------------------------------------------------------
 @api_view(['GET', 'POST'])
-@validar_token
 def ciudad_api_list(request):
     if request.method == 'GET':
         ciudades = Ciudad.objects.all()
@@ -29,7 +28,6 @@ def ciudad_api_list(request):
 # RUTA 2: Detalle (GET), Actualizar (PUT), Eliminar (DELETE) de UNA ciudad
 # --------------------------------------------------------
 @api_view(['GET', 'PUT', 'DELETE'])
-@validar_token
 def ciudad_api_detail(request, pk):
     try:
         ciudad = Ciudad.objects.get(pk=pk)

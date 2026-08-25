@@ -34,5 +34,4 @@ urlpatterns = [
     path('ciudades/eliminar/<int:id_ciudad>/', eliminar_ciudad, name='eliminar_ciudad'),
     path('api/ciudades/', ciudad_api_list, name='api_ciudades_list'),
     path('api/ciudades/<int:pk>/', ciudad_api_detail, name='api_ciudades_detail'),
-    path('api/auth/login/', login_usuario, name='api_login'),
 ]
